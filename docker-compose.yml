@@ -1,0 +1,71 @@
+version: '3.8'
+
+# Services
+services:
+
+  # Nginx Service
+  nginx:
+    image: nginx:1.19-alpine
+    container_name: webserver
+    ports:
+      - 8080:80
+    volumes:
+      - ./api:/var/www/backend
+      - ./.docker/nginx/conf.d:/etc/nginx/conf.d
+      - phpmyadmindata:/var/www/phpmyadmin
+    depends_on:
+      - backend
+      - phpmyadmin
+      - frontend
+      
+
+  # Backend Service
+  backend:
+    build: ./api
+    container_name: backend
+    working_dir: /var/www/backend
+    expose:
+      - "9000"
+    volumes:
+      - ./api:/var/www/backend
+    depends_on:
+      - frontend
+      - mysql
+       
+  # Frontend Service
+  frontend:
+    build: ./www
+    container_name: frontend
+    working_dir: /var/www/frontend
+    expose:
+      - "8080"
+    volumes:
+      - ./www:/var/www/frontend
+
+  # MySQL Service
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: demo
+    volumes:
+      - ./.docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - mysqldata:/var/lib/mysql
+
+  # PhpMyAdmin Service
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - 8081:80
+    environment:
+      PMA_HOST: mysql
+    depends_on:
+      - mysql
+        
+       
+# Volumes
+volumes:
+  mysqldata:
+  phpmyadmindata:
