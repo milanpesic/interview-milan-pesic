@@ -29,7 +29,6 @@ services:
     volumes:
       - ./api:/var/www/backend
     depends_on:
-      - frontend
       - mysql
        
   # Frontend Service
@@ -41,6 +40,8 @@ services:
       - "8080"
     volumes:
       - ./www:/var/www/frontend
+    depends_on:
+      - backend
 
   # MySQL Service
   mysql:
