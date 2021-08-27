@@ -10,4 +10,4 @@ npm i @vue/cli-service
 
 cd ../
 
-docker exec backend php artisan migrate
+docker exec backend php artisan migrate --force
