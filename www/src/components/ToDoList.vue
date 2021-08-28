@@ -1,5 +1,5 @@
 <template>
-    <div style="margin-top: 100px"> 
+    <div style="margin-top: 100px">
         <div class="row section" style="width: 60%">
             <table class="centered z-depth-5" v-if="load === false ">
                 <thead>
@@ -110,7 +110,9 @@ export default {
             this.loading = true,
             this.updating = true,
             axios.post(this.url +  'create', { task: this.task, checked: 0 })
-                .then(response => (console.log(response),this.showToDoTasks = response.data, this.task = '', this.disabled = true)) 
+                .then(response => {
+                  return (this.showToDoTasks=response.data, this.task='', this.disabled=true);
+                }) 
                 .catch(error => (console.log(error.response.data)))
                 .finally(() => {
                     this.loading = false,
@@ -119,7 +121,7 @@ export default {
         },
         toDoUpdate(val) {
             this.edit = false,
-            axios.post(this.url + 'update/' + val.id, { task: val.task }).then(response => (console.log(response))).catch(error => (console.log(error)));
+            axios.post(this.url + 'update/' + val.id, { task: val.task }).then(() => {}).catch(error => (console.log(error)));
         },
         toDoChecked(val) {
             val.checked = !val.checked
@@ -132,12 +134,14 @@ export default {
                     checked: 0
                 }
             }
-            axios.post(this.url + 'checked/' + val.id, this.data).then(response => (console.log(response))).catch(error => (console.log(error)));
+            axios.post(this.url + 'checked/' + val.id, this.data).then(() => {}).catch(error => (console.log(error)));
         },
         toDoDelete(id) {
             this.deleting = id,
             axios.post(this.url + 'delete/' + id)
-                .then(response => (console.log(response), this.showToDoTasks = response.data))
+                .then(response => {
+                    return (this.showToDoTasks = response.data)
+                })
                 .catch(error => (console.log(error)))
                 .finally(() => {
                     this.deleting != id

@@ -1,5 +1,4 @@
 module.exports = {
-    //mode: 'production',
     devServer: {
         disableHostCheck: true,
         hot: true,
